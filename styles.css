@@ -252,26 +252,35 @@ button {
 }
 
 @media (max-width: 900px) {
+  :root {
+    --mobile-preview-size: min(calc(100vw - 24px), 46vh, 520px);
+    --mobile-preview-space: calc(var(--mobile-preview-size) + 28px);
+  }
+
   .app {
     grid-template-columns: 1fr;
     padding: 12px;
   }
 
   .workspace {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 10;
-    padding: 6px 0 10px;
+    padding: 8px 12px 10px;
     background: var(--paper);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .08);
   }
 
   .canvas-wrap {
-    width: min(100%, 46vh);
+    width: var(--mobile-preview-size);
     max-width: 520px;
   }
 
   .panel {
     max-height: none;
+    margin-top: var(--mobile-preview-space);
   }
 }
 
