@@ -257,8 +257,17 @@ button {
     padding: 12px;
   }
 
+  .workspace {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 6px 0 10px;
+    background: var(--paper);
+  }
+
   .canvas-wrap {
-    width: min(100%, 72vh);
+    width: min(100%, 46vh);
+    max-width: 520px;
   }
 
   .panel {
