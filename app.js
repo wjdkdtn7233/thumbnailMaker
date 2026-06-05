@@ -41,7 +41,7 @@ const state = {
   dragOffset: { x: 0, y: 0 },
   location: { x: 500, y: 625, size: 44 },
   restaurant: { x: 415, y: 720, size: 82 },
-  logoBox: { x: 58, y: 52, size: 164 },
+  logoBox: { x: 58, y: 52, size: 205 },
   hitBoxes: {},
 };
 
