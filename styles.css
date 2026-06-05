@@ -253,7 +253,7 @@ button {
 
 @media (max-width: 900px) {
   :root {
-    --mobile-preview-size: min(calc(100vw - 24px), 46vh, 520px);
+    --mobile-preview-size: min(calc(100vw - 24px), 360px);
     --mobile-preview-space: calc(var(--mobile-preview-size) + 28px);
   }
 
@@ -264,7 +264,7 @@ button {
 
   .workspace {
     position: fixed;
-    top: 0;
+    top: env(safe-area-inset-top);
     left: 0;
     right: 0;
     z-index: 10;
