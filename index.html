@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>썸네일 생성기</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <section class="workspace" aria-label="썸네일 편집 영역">
+      <div class="canvas-wrap">
+        <canvas id="thumbnailCanvas" width="800" height="800"></canvas>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="편집 도구">
+      <div class="panel-head">
+        <h1>밍글이용 썸네일 생성기 <span class="title-heart" aria-hidden="true">♥</span></h1>
+        <button id="downloadBtn" type="button">다운로드</button>
+      </div>
+
+      <label class="field">
+        <span>사진</span>
+        <input id="photoInput" type="file" accept="image/*">
+      </label>
+
+      <label class="field">
+        <span>선택</span>
+        <select id="activeLayer">
+          <option value="location">위치 텍스트</option>
+          <option value="restaurant">음식점 이름</option>
+          <option value="logo">로고</option>
+        </select>
+      </label>
+
+      <div class="group">
+        <div class="group-title">음식점 이름 텍스트</div>
+        <label class="field">
+          <span>음식점 이름</span>
+          <input id="restaurantText" type="text" value="함평국밥">
+        </label>
+        <label class="field">
+          <span>폰트 크기</span>
+          <div class="range-row">
+            <input id="restaurantSize" type="range" min="42" max="110" value="82">
+            <input id="restaurantSizeNumber" type="number" min="42" max="110" value="82">
+          </div>
+        </label>
+        <div class="color-row">
+          <label class="field">
+            <span>폰트 색상</span>
+            <input id="restaurantFillColor" type="color" value="#030303">
+          </label>
+          <label class="field">
+            <span>테두리 색상</span>
+            <input id="restaurantStrokeColor" type="color" value="#ffffff">
+          </label>
+        </div>
+        <label class="field">
+          <span>테두리 두께</span>
+          <div class="range-row">
+            <input id="restaurantStrokeWidth" type="range" min="0" max="28" value="9">
+            <input id="restaurantStrokeWidthNumber" type="number" min="0" max="28" value="9">
+          </div>
+        </label>
+      </div>
+
+      <div class="group">
+        <div class="group-title">위치 텍스트</div>
+        <label class="field">
+          <span>위치</span>
+          <input id="locationText" type="text" value="상봉역 맛집">
+        </label>
+        <label class="field">
+          <span>폰트 크기</span>
+          <div class="range-row">
+            <input id="locationSize" type="range" min="24" max="74" value="44">
+            <input id="locationSizeNumber" type="number" min="24" max="74" value="44">
+          </div>
+        </label>
+        <div class="color-row">
+          <label class="field">
+            <span>폰트 색상</span>
+            <input id="locationFillColor" type="color" value="#10a437">
+          </label>
+          <label class="field">
+            <span>테두리 색상</span>
+            <input id="locationStrokeColor" type="color" value="#ffffff">
+          </label>
+        </div>
+        <label class="field">
+          <span>테두리 두께</span>
+          <div class="range-row">
+            <input id="locationStrokeWidth" type="range" min="0" max="20" value="4">
+            <input id="locationStrokeWidthNumber" type="number" min="0" max="20" value="4">
+          </div>
+        </label>
+        <label class="field">
+          <span>위치 아이콘 크기</span>
+          <div class="range-row">
+            <input id="locationIconSize" type="range" min="20" max="90" value="32">
+            <input id="locationIconSizeNumber" type="number" min="20" max="90" value="32">
+          </div>
+        </label>
+      </div>
+
+      <div class="group">
+        <label class="check">
+          <input id="useLogo" type="checkbox" checked>
+          <span>mg_logo.png 넣기</span>
+        </label>
+        <label class="field">
+          <span>로고 파일</span>
+          <input id="logoInput" type="file" accept="image/*">
+        </label>
+        <label class="field">
+          <span>로고 크기</span>
+          <div class="range-row">
+            <input id="logoSize" type="range" min="40" max="260" value="164">
+            <input id="logoSizeNumber" type="number" min="40" max="260" value="164">
+          </div>
+        </label>
+        <label class="field">
+          <span>로고 투명도</span>
+          <div class="range-row">
+            <input id="logoOpacity" type="range" min="0" max="100" value="100">
+            <input id="logoOpacityNumber" type="number" min="0" max="100" value="100">
+          </div>
+        </label>
+      </div>
+
+      <div class="group">
+        <div class="group-title">템플릿</div>
+        <label class="check">
+          <input id="showBorder" type="checkbox" checked>
+          <span>손그림 테두리</span>
+        </label>
+        <label class="field">
+          <span>사진 밝기</span>
+          <div class="range-row">
+            <input id="photoDim" type="range" min="0" max="45" value="0">
+            <input id="photoDimNumber" type="number" min="0" max="45" value="0">
+          </div>
+        </label>
+      </div>
+    </aside>
+  </main>
+
+  <script src="mg_logo_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
