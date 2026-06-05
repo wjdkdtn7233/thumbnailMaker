@@ -497,6 +497,54 @@ function drawSelectionBox(box) {
   ctx.restore();
 }
 
+function drawPhotoSelectionGrid() {
+  const padding = 18;
+  const x = padding;
+  const y = padding;
+  const width = canvas.width - padding * 2;
+  const height = canvas.height - padding * 2;
+  const columns = 4;
+  const rows = 4;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(47, 128, 255, .82)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, width, height);
+
+  ctx.strokeStyle = "rgba(47, 128, 255, .46)";
+  ctx.lineWidth = 1.2;
+  for (let i = 1; i < columns; i += 1) {
+    const lineX = x + (width / columns) * i;
+    ctx.beginPath();
+    ctx.moveTo(lineX, y);
+    ctx.lineTo(lineX, y + height);
+    ctx.stroke();
+  }
+
+  for (let i = 1; i < rows; i += 1) {
+    const lineY = y + (height / rows) * i;
+    ctx.beginPath();
+    ctx.moveTo(x, lineY);
+    ctx.lineTo(x + width, lineY);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "#2f80ff";
+  [
+    [x, y],
+    [x + width, y],
+    [x, y + height],
+    [x + width, y + height],
+  ].forEach(([cx, cy]) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  });
+  ctx.restore();
+}
+
 function render(options = {}) {
   const showSelection = options.showSelection !== false;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -509,7 +557,9 @@ function render(options = {}) {
   }
 
   drawRoughBorder();
-  state.hitBoxes.photo = { x: 0, y: 0, width: canvas.width, height: canvas.height };
+  state.hitBoxes.photo = state.photo
+    ? { x: state.photoBox.x, y: state.photoBox.y, width: state.photoBox.width, height: state.photoBox.height }
+    : { x: 0, y: 0, width: canvas.width, height: canvas.height };
   state.hitBoxes.logo = drawLogo();
 
   state.location.size = Number(controls.locationSize.value);
@@ -555,7 +605,9 @@ function render(options = {}) {
     }
   );
 
-  if (showSelection && ["location", "restaurant", "logo"].includes(controls.activeLayer.value)) {
+  if (showSelection && controls.activeLayer.value === "photo") {
+    drawPhotoSelectionGrid();
+  } else if (showSelection && ["location", "restaurant", "logo"].includes(controls.activeLayer.value)) {
     drawSelectionBox(state.hitBoxes[controls.activeLayer.value]);
   }
 }
@@ -619,9 +671,11 @@ function hitTest(point) {
 
 function resizeHandleHitTest(point) {
   const layer = controls.activeLayer.value;
-  if (!["location", "restaurant", "logo"].includes(layer)) return null;
+  if (!["photo", "location", "restaurant", "logo"].includes(layer)) return null;
 
-  const box = state.hitBoxes[layer];
+  const box = layer === "photo"
+    ? { x: 18, y: 18, width: canvas.width - 36, height: canvas.height - 36 }
+    : state.hitBoxes[layer];
   if (!box) return null;
 
   const padding = 8;
