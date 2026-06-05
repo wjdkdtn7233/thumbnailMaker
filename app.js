@@ -95,8 +95,42 @@ function setupSyncedRanges() {
     const range = controls[rangeId];
     const number = controls[numberId];
     if (!range || !number) return;
+    let touchGuard = null;
+
+    range.addEventListener("touchstart", (event) => {
+      const touch = event.touches[0];
+      touchGuard = {
+        startValue: range.value,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        allowChange: false,
+      };
+    }, { passive: true });
+
+    range.addEventListener("touchmove", (event) => {
+      if (!touchGuard) return;
+      const touch = event.touches[0];
+      const dx = Math.abs(touch.clientX - touchGuard.startX);
+      const dy = Math.abs(touch.clientY - touchGuard.startY);
+      touchGuard.allowChange = dx > 18 && dx > dy;
+    }, { passive: true });
+
+    range.addEventListener("touchend", () => {
+      if (touchGuard && !touchGuard.allowChange) {
+        range.value = touchGuard.startValue;
+        syncRangeValue(range, number);
+        render();
+      }
+      touchGuard = null;
+    });
 
     range.addEventListener("input", () => {
+      if (touchGuard && !touchGuard.allowChange) {
+        range.value = touchGuard.startValue;
+        syncRangeValue(range, number);
+        render();
+        return;
+      }
       syncRangeValue(range, number);
       render();
     });
