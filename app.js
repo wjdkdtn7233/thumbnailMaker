@@ -498,15 +498,18 @@ function drawSelectionBox(box) {
 }
 
 function drawPhotoSelectionGrid() {
-  const padding = 18;
-  const x = padding;
-  const y = padding;
-  const width = canvas.width - padding * 2;
-  const height = canvas.height - padding * 2;
+  if (!state.photo) return;
+  const x = state.photoBox.x;
+  const y = state.photoBox.y;
+  const width = state.photoBox.width;
+  const height = state.photoBox.height;
   const columns = 4;
   const rows = 4;
 
   ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, 0, canvas.width, canvas.height);
+  ctx.clip();
   ctx.strokeStyle = "rgba(47, 128, 255, .82)";
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, width, height);
@@ -653,7 +656,14 @@ function sizeControlForLayer(layer) {
 }
 
 function hitTest(point) {
-  const order = [controls.activeLayer.value, "restaurant", "location", "logo", "photo"];
+  const activeLayer = controls.activeLayer.value;
+  const order = [
+    ...(activeLayer !== "photo" ? [activeLayer] : []),
+    "restaurant",
+    "location",
+    "logo",
+    "photo",
+  ];
   for (const key of [...new Set(order)]) {
     const box = state.hitBoxes[key];
     if (!box) continue;
@@ -673,9 +683,7 @@ function resizeHandleHitTest(point) {
   const layer = controls.activeLayer.value;
   if (!["photo", "location", "restaurant", "logo"].includes(layer)) return null;
 
-  const box = layer === "photo"
-    ? { x: 18, y: 18, width: canvas.width - 36, height: canvas.height - 36 }
-    : state.hitBoxes[layer];
+  const box = state.hitBoxes[layer];
   if (!box) return null;
 
   const padding = 8;
