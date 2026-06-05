@@ -3,6 +3,8 @@ const ctx = canvas.getContext("2d");
 
 const controls = {
   photoInput: document.getElementById("photoInput"),
+  photoScale: document.getElementById("photoScale"),
+  photoScaleNumber: document.getElementById("photoScaleNumber"),
   logoInput: document.getElementById("logoInput"),
   downloadBtn: document.getElementById("downloadBtn"),
   locationText: document.getElementById("locationText"),
@@ -34,6 +36,7 @@ const controls = {
 
 const state = {
   photo: null,
+  photoBox: { x: 0, y: 0, width: 800, height: 800, initialized: false },
   logo: null,
   dragging: null,
   pinching: null,
@@ -61,6 +64,7 @@ const syncedRanges = [
   ["logoSize", "logoSizeNumber"],
   ["logoOpacity", "logoOpacityNumber"],
   ["photoDim", "photoDimNumber"],
+  ["photoScale", "photoScaleNumber"],
 ];
 
 function clampNumber(value, min, max) {
@@ -158,12 +162,41 @@ function loadImageFromFile(file, callback) {
 }
 
 function drawCoverImage(image) {
-  const scale = Math.max(canvas.width / image.width, canvas.height / image.height);
+  const baseScale = Math.max(canvas.width / image.width, canvas.height / image.height);
+  const scale = baseScale * (Number(controls.photoScale.value) / 100);
   const width = image.width * scale;
   const height = image.height * scale;
-  const x = (canvas.width - width) / 2;
-  const y = (canvas.height - height) / 2;
-  ctx.drawImage(image, x, y, width, height);
+
+  if (!state.photoBox.initialized) {
+    state.photoBox.x = (canvas.width - width) / 2;
+    state.photoBox.y = (canvas.height - height) / 2;
+    state.photoBox.initialized = true;
+  } else if (state.photoBox.width !== width || state.photoBox.height !== height) {
+    const centerX = state.photoBox.x + state.photoBox.width / 2;
+    const centerY = state.photoBox.y + state.photoBox.height / 2;
+    state.photoBox.x = centerX - width / 2;
+    state.photoBox.y = centerY - height / 2;
+  }
+
+  state.photoBox.width = width;
+  state.photoBox.height = height;
+  constrainPhotoBox();
+  ctx.drawImage(image, state.photoBox.x, state.photoBox.y, width, height);
+}
+
+function constrainPhotoBox() {
+  const box = state.photoBox;
+  if (box.width <= canvas.width) {
+    box.x = (canvas.width - box.width) / 2;
+  } else {
+    box.x = Math.min(0, Math.max(canvas.width - box.width, box.x));
+  }
+
+  if (box.height <= canvas.height) {
+    box.y = (canvas.height - box.height) / 2;
+  } else {
+    box.y = Math.min(0, Math.max(canvas.height - box.height, box.y));
+  }
 }
 
 function drawPlaceholder() {
@@ -476,6 +509,7 @@ function render(options = {}) {
   }
 
   drawRoughBorder();
+  state.hitBoxes.photo = { x: 0, y: 0, width: canvas.width, height: canvas.height };
   state.hitBoxes.logo = drawLogo();
 
   state.location.size = Number(controls.locationSize.value);
@@ -559,6 +593,7 @@ function distanceFromTouches(touches) {
 }
 
 function sizeControlForLayer(layer) {
+  if (layer === "photo") return controls.photoScale;
   if (layer === "location") return controls.locationSize;
   if (layer === "restaurant") return controls.restaurantSize;
   if (layer === "logo") return controls.logoSize;
@@ -566,7 +601,7 @@ function sizeControlForLayer(layer) {
 }
 
 function hitTest(point) {
-  const order = [controls.activeLayer.value, "restaurant", "location", "logo"];
+  const order = [controls.activeLayer.value, "restaurant", "location", "logo", "photo"];
   for (const key of [...new Set(order)]) {
     const box = state.hitBoxes[key];
     if (!box) continue;
@@ -602,6 +637,7 @@ function resizeHandleHitTest(point) {
 }
 
 function layerPosition(layer) {
+  if (layer === "photo") return state.photoBox;
   if (layer === "logo") return state.logoBox;
   return state[layer];
 }
@@ -691,6 +727,11 @@ function moveDrag(event) {
   const target = layerPosition(state.dragging);
   target.x = Math.max(0, Math.min(canvas.width, point.x - state.dragOffset.x));
   target.y = Math.max(0, Math.min(canvas.height, point.y - state.dragOffset.y));
+  if (state.dragging === "photo") {
+    target.x = point.x - state.dragOffset.x;
+    target.y = point.y - state.dragOffset.y;
+    constrainPhotoBox();
+  }
   render();
 }
 
@@ -739,6 +780,7 @@ function preloadLogo() {
 controls.photoInput.addEventListener("change", (event) => {
   loadImageFromFile(event.target.files[0], (image) => {
     state.photo = image;
+    state.photoBox.initialized = false;
     render();
   });
 });

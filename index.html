@@ -24,10 +24,18 @@
         <span>사진</span>
         <input id="photoInput" type="file" accept="image/*">
       </label>
+      <label class="field">
+        <span>사진 확대</span>
+        <div class="range-row">
+          <input id="photoScale" type="range" min="100" max="220" value="100">
+          <input id="photoScaleNumber" type="number" min="100" max="220" value="100">
+        </div>
+      </label>
 
       <label class="field">
         <span>선택</span>
         <select id="activeLayer">
+          <option value="photo">사진</option>
           <option value="location">위치 텍스트</option>
           <option value="restaurant">음식점 이름</option>
           <option value="logo">로고</option>
