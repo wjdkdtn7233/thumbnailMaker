@@ -10,6 +10,8 @@ const controls = {
   downloadBtn: document.getElementById("downloadBtn"),
   shareKakaoBtn: document.getElementById("shareKakaoBtn"),
   copyBtn: document.getElementById("copyBtn"),
+  mascotBtn: document.getElementById("mascotBtn"),
+  mascotToast: document.getElementById("mascotToast"),
   locationText: document.getElementById("locationText"),
   restaurantText: document.getElementById("restaurantText"),
   showLocationText: document.getElementById("showLocationText"),
@@ -918,6 +920,16 @@ async function copyImageToClipboard() {
   render();
 }
 
+let mascotToastTimer = null;
+
+function showMascotMessage() {
+  controls.mascotToast.classList.add("is-visible");
+  window.clearTimeout(mascotToastTimer);
+  mascotToastTimer = window.setTimeout(() => {
+    controls.mascotToast.classList.remove("is-visible");
+  }, 950);
+}
+
 function preloadLogo() {
   const image = new Image();
   image.onload = () => {
@@ -964,6 +976,7 @@ controls.resetPhotoPosition.addEventListener("click", resetPhotoPosition);
 controls.downloadBtn.addEventListener("click", downloadImage);
 controls.shareKakaoBtn.addEventListener("click", shareKakaoImage);
 controls.copyBtn.addEventListener("click", copyImageToClipboard);
+controls.mascotBtn.addEventListener("click", showMascotMessage);
 canvas.addEventListener("mousedown", startDrag);
 canvas.addEventListener("mousemove", moveDrag);
 canvas.addEventListener("mousemove", updateCanvasCursor);

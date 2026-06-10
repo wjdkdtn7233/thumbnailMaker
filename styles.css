@@ -240,10 +240,47 @@ button {
   font-size: 20px;
 }
 
+.mascot-button {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mascot-button:active {
+  transform: translateY(1px) scale(.98);
+}
+
 .action-mascot {
   width: 168px;
   height: 66px;
   object-fit: contain;
+}
+
+.mascot-toast {
+  position: fixed;
+  left: 50%;
+  top: 22px;
+  z-index: 50;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: #ef233c;
+  box-shadow: 0 12px 30px rgba(239, 35, 60, .28);
+  font-weight: 900;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -10px) scale(.96);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.mascot-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
 }
 
 .secondary-button {

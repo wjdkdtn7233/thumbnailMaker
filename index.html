@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>썸네일 생성기</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=20260610-21">
+  <link rel="stylesheet" href="styles.css?v=20260610-22">
 </head>
 <body>
   <main class="app">
@@ -34,7 +34,9 @@
           <button id="downloadBtn" class="icon-button download-button" type="button" aria-label="다운로드" title="다운로드">
             <i class="fa-solid fa-download" aria-hidden="true"></i>
           </button>
-          <img class="action-mascot" src="hamjjogi_transparent.png" alt="" aria-hidden="true">
+          <button id="mascotBtn" class="mascot-button" type="button" aria-label="마스코트 메시지">
+            <img class="action-mascot" src="hamjjogi_transparent.png" alt="">
+          </button>
         </div>
       </div>
 
@@ -190,7 +192,9 @@
     </aside>
   </main>
 
-  <script src="mg_logo_data.js?v=20260610-19"></script>
-  <script src="app.js?v=20260610-19"></script>
+  <div id="mascotToast" class="mascot-toast" aria-live="polite">민지야 사랑해♥</div>
+
+  <script src="mg_logo_data.js?v=20260610-22"></script>
+  <script src="app.js?v=20260610-22"></script>
 </body>
 </html>
