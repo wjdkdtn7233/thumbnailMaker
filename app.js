@@ -12,6 +12,7 @@ const controls = {
   copyBtn: document.getElementById("copyBtn"),
   mascotBtn: document.getElementById("mascotBtn"),
   mascotToast: document.getElementById("mascotToast"),
+  appNotice: document.getElementById("appNotice"),
   locationText: document.getElementById("locationText"),
   restaurantText: document.getElementById("restaurantText"),
   showLocationText: document.getElementById("showLocationText"),
@@ -879,7 +880,7 @@ function downloadImage() {
     link.click();
     link.remove();
   } catch (error) {
-    alert("다운로드가 막혔습니다. 로고 파일을 직접 선택한 뒤 다시 시도해 주세요.");
+    showNotice("다운로드가 막혔습니다. 로고 파일을 직접 선택한 뒤 다시 시도해 주세요.");
   }
   render();
 }
@@ -903,11 +904,11 @@ async function shareKakaoImage() {
         text: shareData.text,
       });
     } else {
-      alert("이 브라우저에서는 공유를 지원하지 않습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
+      showNotice("이 브라우저에서는 공유를 지원하지 않습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
     }
   } catch (error) {
     if (error.name !== "AbortError") {
-      alert("공유를 시작하지 못했습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
+      showNotice("공유를 시작하지 못했습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
     }
   }
   render();
@@ -929,12 +930,12 @@ async function copyImageToClipboard() {
         "image/png": canvasToPngBlob(),
       }),
     ]);
-    alert("이미지가 클립보드에 복사되었습니다.");
+    showNotice("이미지가 클립보드에 복사되었습니다.");
   } catch (error) {
     if (!window.isSecureContext) {
-      alert("브라우저 보안 정책 때문에 파일로 직접 열면 이미지 복사가 막힙니다. GitHub Pages 같은 HTTPS 주소나 localhost로 열어 주세요.");
+      showNotice("파일로 직접 열면 이미지 복사가 막힙니다. HTTPS 주소나 localhost로 열어 주세요.");
     } else {
-      alert("이 브라우저에서는 이미지 클립보드 복사를 지원하지 않습니다.");
+      showNotice("이 브라우저에서는 이미지 클립보드 복사를 지원하지 않습니다.");
     }
   }
   render();
@@ -950,10 +951,21 @@ function showMascotMessage() {
   }, 950);
 }
 
+let appNoticeTimer = null;
+
+function showNotice(message) {
+  controls.appNotice.textContent = message;
+  controls.appNotice.classList.add("is-visible");
+  window.clearTimeout(appNoticeTimer);
+  appNoticeTimer = window.setTimeout(() => {
+    controls.appNotice.classList.remove("is-visible");
+  }, 1400);
+}
+
 function updateLogoSourceMode(options = {}) {
   if (!controls.showLogo.checked) {
     if (options.warn) {
-      alert("로고 표시를 먼저 켜주세요.");
+      showNotice("로고 표시를 먼저 켜주세요.");
     }
     controls.useLogo.checked = false;
     state.customLogo = null;
@@ -963,6 +975,9 @@ function updateLogoSourceMode(options = {}) {
   }
 
   if (!state.customLogo && !controls.useLogo.checked) {
+    if (options.warnMissingCustomLogo) {
+      showNotice("대체 로고 파일을 넣어주세요.");
+    }
     controls.useLogo.checked = true;
   }
 
@@ -1035,7 +1050,10 @@ controls.logoInput.addEventListener("click", (event) => {
 setupSyncedRanges();
 controls.showLogo.addEventListener("change", updateLogoSourceMode);
 controls.useLogo.addEventListener("change", () => {
-  updateLogoSourceMode({ warn: controls.useLogo.checked });
+  updateLogoSourceMode({
+    warn: controls.useLogo.checked,
+    warnMissingCustomLogo: !controls.useLogo.checked,
+  });
 });
 controls.resetPhotoPosition.addEventListener("click", resetPhotoPosition);
 controls.downloadBtn.addEventListener("click", downloadImage);

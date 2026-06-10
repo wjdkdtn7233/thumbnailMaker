@@ -283,6 +283,30 @@ button {
   transform: translate(-50%, 0) scale(1);
 }
 
+.app-notice {
+  position: fixed;
+  left: 50%;
+  top: 22px;
+  z-index: 60;
+  max-width: min(92vw, 420px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: #2563eb;
+  box-shadow: 0 12px 30px rgba(37, 99, 235, .28);
+  font-weight: 900;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -10px) scale(.96);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.app-notice.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
 .secondary-button {
   width: 100%;
   min-height: 42px;
