@@ -582,8 +582,8 @@ function render(options = {}) {
   state.hitBoxes.location = null;
   state.hitBoxes.restaurant = null;
 
-  const locationText = controls.locationText.value.trim() || "상봉역 맛집";
-  const restaurantText = controls.restaurantText.value.trim() || "함평국밥";
+  const locationText = controls.locationText.value.trim() || "위치";
+  const restaurantText = controls.restaurantText.value.trim() || "음식점 이름";
 
   if (controls.showLocationText.checked) {
     const pinScale = Number(controls.locationIconSize.value) / 43;
