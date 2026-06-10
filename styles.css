@@ -380,6 +380,11 @@ button {
   color: #4f4f4f;
 }
 
+.field input[type="file"]:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
 .field input[type="file"]::file-selector-button {
   margin-right: 10px;
   border: 0;

@@ -31,6 +31,7 @@ const controls = {
   restaurantStrokeColor: document.getElementById("restaurantStrokeColor"),
   restaurantStrokeWidth: document.getElementById("restaurantStrokeWidth"),
   restaurantStrokeWidthNumber: document.getElementById("restaurantStrokeWidthNumber"),
+  showLogo: document.getElementById("showLogo"),
   useLogo: document.getElementById("useLogo"),
   logoSize: document.getElementById("logoSize"),
   logoSizeNumber: document.getElementById("logoSizeNumber"),
@@ -45,7 +46,8 @@ const controls = {
 const state = {
   photo: null,
   photoBox: { x: 0, y: 0, width: 800, height: 800, initialized: false },
-  logo: null,
+  defaultLogo: null,
+  customLogo: null,
   dragging: null,
   pinching: null,
   resizing: null,
@@ -467,16 +469,18 @@ function joinBoxes(boxes) {
 }
 
 function drawLogo() {
-  if (!controls.useLogo.checked || !state.logo) return null;
+  if (!controls.showLogo.checked) return null;
+  const logo = controls.useLogo.checked ? state.defaultLogo : state.customLogo;
+  if (!logo) return null;
   const size = Number(controls.logoSize.value);
-  const ratio = state.logo.width / state.logo.height;
+  const ratio = logo.width / logo.height;
   const width = ratio >= 1 ? size : size * ratio;
   const height = ratio >= 1 ? size / ratio : size;
   state.logoBox.size = size;
 
   ctx.save();
   ctx.globalAlpha = Number(controls.logoOpacity.value) / 100;
-  ctx.drawImage(state.logo, state.logoBox.x, state.logoBox.y, width, height);
+  ctx.drawImage(logo, state.logoBox.x, state.logoBox.y, width, height);
   ctx.restore();
 
   return { x: state.logoBox.x, y: state.logoBox.y, width, height };
@@ -740,6 +744,7 @@ function startDrag(event) {
       layer,
       startDistance: distanceFromTouches(event.touches),
       startSize: Number(sizeControl.value),
+      startLocationIconSize: Number(controls.locationIconSize.value),
     };
     controls.activeLayer.value = layer;
     render();
@@ -760,6 +765,7 @@ function startDrag(event) {
       center,
       startDistance: Math.max(1, Math.hypot(point.x - center.x, point.y - center.y)),
       startSize: Number(sizeControl.value),
+      startLocationIconSize: Number(controls.locationIconSize.value),
     };
     controls.activeLayer.value = resizeHit.layer;
     render();
@@ -787,6 +793,13 @@ function moveDrag(event) {
       Math.min(Number(sizeControl.max), Math.round(state.resizing.startSize * scale))
     );
     setRangePairValue(sizeControl, nextSize);
+    if (state.resizing.layer === "location") {
+      const nextIconSize = Math.max(
+        Number(controls.locationIconSize.min),
+        Math.min(Number(controls.locationIconSize.max), Math.round(state.resizing.startLocationIconSize * scale))
+      );
+      setRangePairValue(controls.locationIconSize, nextIconSize);
+    }
     render();
     return;
   }
@@ -802,6 +815,13 @@ function moveDrag(event) {
       Math.min(Number(sizeControl.max), Math.round(state.pinching.startSize * scale))
     );
     setRangePairValue(sizeControl, nextSize);
+    if (state.pinching.layer === "location") {
+      const nextIconSize = Math.max(
+        Number(controls.locationIconSize.min),
+        Math.min(Number(controls.locationIconSize.max), Math.round(state.pinching.startLocationIconSize * scale))
+      );
+      setRangePairValue(controls.locationIconSize, nextIconSize);
+    }
     render();
     return;
   }
@@ -930,11 +950,34 @@ function showMascotMessage() {
   }, 950);
 }
 
+function updateLogoSourceMode(options = {}) {
+  if (!controls.showLogo.checked) {
+    if (options.warn) {
+      alert("로고 표시를 먼저 켜주세요.");
+    }
+    controls.useLogo.checked = false;
+    state.customLogo = null;
+    controls.logoInput.value = "";
+    render();
+    return;
+  }
+
+  if (!state.customLogo && !controls.useLogo.checked) {
+    controls.useLogo.checked = true;
+  }
+
+  if (controls.useLogo.checked) {
+    state.customLogo = null;
+    controls.logoInput.value = "";
+  }
+  render();
+}
+
 function preloadLogo() {
   const image = new Image();
   image.onload = () => {
-    state.logo = image;
-    render();
+    state.defaultLogo = image;
+    updateLogoSourceMode();
   };
   image.onerror = () => render();
   image.src = window.DEFAULT_LOGO_DATA_URL || "mg_logo.png";
@@ -949,11 +992,30 @@ controls.photoInput.addEventListener("change", (event) => {
 });
 
 controls.logoInput.addEventListener("change", (event) => {
-  loadImageFromFile(event.target.files[0], (image) => {
-    state.logo = image;
-    controls.useLogo.checked = true;
-    render();
+  const file = event.target.files[0];
+  if (file && !controls.showLogo.checked) {
+    updateLogoSourceMode({ warn: true });
+    return;
+  }
+
+  if (!file) {
+    state.customLogo = null;
+    updateLogoSourceMode();
+    return;
+  }
+
+  loadImageFromFile(file, (image) => {
+    state.customLogo = image;
+    controls.useLogo.checked = false;
+    updateLogoSourceMode();
   });
+});
+
+controls.logoInput.addEventListener("click", (event) => {
+  if (!controls.showLogo.checked) {
+    event.preventDefault();
+    updateLogoSourceMode({ warn: true });
+  }
 });
 
 [
@@ -966,17 +1028,21 @@ controls.logoInput.addEventListener("change", (event) => {
   controls.locationStrokeColor,
   controls.restaurantFillColor,
   controls.restaurantStrokeColor,
-  controls.useLogo,
   controls.showBorder,
   controls.borderColor,
 ].forEach((control) => control.addEventListener("input", render));
 
 setupSyncedRanges();
+controls.showLogo.addEventListener("change", updateLogoSourceMode);
+controls.useLogo.addEventListener("change", () => {
+  updateLogoSourceMode({ warn: controls.useLogo.checked });
+});
 controls.resetPhotoPosition.addEventListener("click", resetPhotoPosition);
 controls.downloadBtn.addEventListener("click", downloadImage);
 controls.shareKakaoBtn.addEventListener("click", shareKakaoImage);
 controls.copyBtn.addEventListener("click", copyImageToClipboard);
 controls.mascotBtn.addEventListener("click", showMascotMessage);
+updateLogoSourceMode();
 canvas.addEventListener("mousedown", startDrag);
 canvas.addEventListener("mousemove", moveDrag);
 canvas.addEventListener("mousemove", updateCanvasCursor);

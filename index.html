@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>썸네일 생성기</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=20260610-23">
+  <link rel="stylesheet" href="styles.css?v=20260610-30">
 </head>
 <body>
   <main class="app">
@@ -86,8 +86,8 @@
         <label class="field">
           <span>폰트 크기</span>
           <div class="range-row">
-            <input id="restaurantSize" type="range" min="42" max="110" value="82">
-            <input id="restaurantSizeNumber" type="number" min="42" max="110" value="82">
+            <input id="restaurantSize" type="range" min="42" max="180" value="82">
+            <input id="restaurantSizeNumber" type="number" min="42" max="180" value="82">
           </div>
         </label>
         <div class="color-row">
@@ -122,8 +122,8 @@
         <label class="field">
           <span>폰트 크기</span>
           <div class="range-row">
-            <input id="locationSize" type="range" min="24" max="74" value="44">
-            <input id="locationSizeNumber" type="number" min="24" max="74" value="44">
+            <input id="locationSize" type="range" min="24" max="130" value="44">
+            <input id="locationSizeNumber" type="number" min="24" max="130" value="44">
           </div>
         </label>
         <div class="color-row">
@@ -146,14 +146,18 @@
         <label class="field">
           <span>위치 아이콘 크기</span>
           <div class="range-row">
-            <input id="locationIconSize" type="range" min="20" max="90" value="32">
-            <input id="locationIconSizeNumber" type="number" min="20" max="90" value="32">
+            <input id="locationIconSize" type="range" min="20" max="170" value="32">
+            <input id="locationIconSizeNumber" type="number" min="20" max="170" value="32">
           </div>
         </label>
       </div>
 
       <div class="group control-group logo-group">
         <div class="group-title">로고</div>
+        <label class="check">
+          <input id="showLogo" type="checkbox" checked>
+          <span>로고 표시</span>
+        </label>
         <label class="check">
           <input id="useLogo" type="checkbox" checked>
           <span>밍글이네 전용 로고 넣기</span>
@@ -165,8 +169,8 @@
         <label class="field">
           <span>로고 크기</span>
           <div class="range-row">
-            <input id="logoSize" type="range" min="40" max="260" value="205">
-            <input id="logoSizeNumber" type="number" min="40" max="260" value="205">
+            <input id="logoSize" type="range" min="40" max="420" value="205">
+            <input id="logoSizeNumber" type="number" min="40" max="420" value="205">
           </div>
         </label>
         <label class="field">
@@ -194,7 +198,7 @@
 
   <div id="mascotToast" class="mascot-toast" aria-live="polite">민지야 사랑해♥</div>
 
-  <script src="mg_logo_data.js?v=20260610-23"></script>
-  <script src="app.js?v=20260610-23"></script>
+  <script src="mg_logo_data.js?v=20260610-30"></script>
+  <script src="app.js?v=20260610-30"></script>
 </body>
 </html>
