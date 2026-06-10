@@ -870,6 +870,104 @@ function canvasToPngBlob() {
   });
 }
 
+function isAppleMobile() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function openShareFallbackWindow() {
+  const previewWindow = window.open("", "_blank");
+  if (!previewWindow) return null;
+  previewWindow.document.write(`
+    <!doctype html>
+    <html lang="ko">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>썸네일 이미지</title>
+      <style>
+        body {
+          margin: 0;
+          min-height: 100vh;
+          display: grid;
+          place-items: center;
+          padding: 18px;
+          background: #f6f4ef;
+          font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+          color: #111;
+        }
+        p {
+          margin: 0;
+          font-weight: 800;
+        }
+      </style>
+    </head>
+    <body><p>이미지를 준비하고 있어요.</p></body>
+    </html>
+  `);
+  previewWindow.document.close();
+  return previewWindow;
+}
+
+function showShareFallback(previewWindow) {
+  const dataUrl = canvas.toDataURL("image/png");
+  if (!previewWindow || previewWindow.closed) {
+    showNotice("공유가 막혔습니다. 다운로드 후 공유해 주세요.");
+    return;
+  }
+
+  previewWindow.document.open();
+  previewWindow.document.write(`
+    <!doctype html>
+    <html lang="ko">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>썸네일 이미지</title>
+      <style>
+        body {
+          margin: 0;
+          min-height: 100vh;
+          display: grid;
+          place-items: center;
+          padding: 18px;
+          background: #f6f4ef;
+          font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+          color: #111;
+        }
+        main {
+          display: grid;
+          gap: 14px;
+          justify-items: center;
+          max-width: 820px;
+        }
+        img {
+          display: block;
+          width: min(100%, 800px);
+          height: auto;
+          border-radius: 8px;
+          box-shadow: 0 16px 42px rgba(0, 0, 0, .16);
+        }
+        p {
+          margin: 0;
+          font-size: 15px;
+          font-weight: 800;
+          text-align: center;
+        }
+      </style>
+    </head>
+    <body>
+      <main>
+        <img src="${dataUrl}" alt="완성된 썸네일">
+        <p>이미지를 길게 눌러 저장하거나 공유해 주세요.</p>
+      </main>
+    </body>
+    </html>
+  `);
+  previewWindow.document.close();
+  showNotice("공유가 막혀 이미지 미리보기를 열었어요.");
+}
+
 function downloadImage() {
   render({ showSelection: false });
   try {
@@ -887,6 +985,7 @@ function downloadImage() {
 
 async function shareKakaoImage() {
   render({ showSelection: false });
+  const fallbackWindow = isAppleMobile() ? openShareFallbackWindow() : null;
   try {
     const blob = await canvasToPngBlob();
     const file = new File([blob], "thumbnail.png", { type: "image/png" });
@@ -898,17 +997,23 @@ async function shareKakaoImage() {
 
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share(shareData);
+      if (fallbackWindow && !fallbackWindow.closed) fallbackWindow.close();
     } else if (navigator.share) {
       await navigator.share({
         title: shareData.title,
         text: shareData.text,
       });
+      if (fallbackWindow && !fallbackWindow.closed) fallbackWindow.close();
     } else {
-      showNotice("이 브라우저에서는 공유를 지원하지 않습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
+      showShareFallback(fallbackWindow);
     }
   } catch (error) {
-    if (error.name !== "AbortError") {
-      showNotice("공유를 시작하지 못했습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
+    if (error.name === "AbortError") {
+      if (fallbackWindow && !fallbackWindow.closed) fallbackWindow.close();
+    } else if (fallbackWindow) {
+      showShareFallback(fallbackWindow);
+    } else {
+      showNotice("공유를 시작하지 못했습니다. 다운로드 후 공유해 주세요.");
     }
   }
   render();
