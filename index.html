@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>썸네일 생성기</title>
-  <link rel="stylesheet" href="styles.css?v=20260610-3">
+  <link rel="stylesheet" href="styles.css?v=20260610-5">
 </head>
 <body>
   <main class="app">
@@ -21,20 +21,7 @@
       </div>
 
       <label class="field">
-        <span>사진</span>
-        <input id="photoInput" type="file" accept="image/*">
-      </label>
-      <label class="field">
-        <span>사진 확대</span>
-        <div class="range-row">
-          <input id="photoScale" type="range" min="100" max="400" value="100">
-          <input id="photoScaleNumber" type="number" min="100" max="400" value="100">
-        </div>
-      </label>
-      <button id="resetPhotoPosition" class="secondary-button" type="button">사진 위치 초기화</button>
-
-      <label class="field">
-        <span>선택</span>
+        <span>편집할 요소</span>
         <select id="activeLayer">
           <option value="photo">사진</option>
           <option value="location">위치 텍스트</option>
@@ -43,7 +30,23 @@
         </select>
       </label>
 
-      <div class="group text-group restaurant-group">
+      <div class="group control-group photo-group">
+        <div class="group-title">사진</div>
+        <label class="field">
+          <span>사진 파일</span>
+          <input id="photoInput" type="file" accept="image/*">
+        </label>
+        <label class="field">
+          <span>사진 확대</span>
+          <div class="range-row">
+            <input id="photoScale" type="range" min="100" max="400" value="100">
+            <input id="photoScaleNumber" type="number" min="100" max="400" value="100">
+          </div>
+        </label>
+        <button id="resetPhotoPosition" class="secondary-button" type="button">초기화</button>
+      </div>
+
+      <div class="group control-group restaurant-group">
         <div class="group-title">음식점 이름 텍스트</div>
         <label class="field">
           <span>음식점 이름</span>
@@ -79,7 +82,7 @@
         </label>
       </div>
 
-      <div class="group text-group location-group">
+      <div class="group control-group location-group">
         <div class="group-title">위치 텍스트</div>
         <label class="field">
           <span>위치</span>
@@ -122,7 +125,8 @@
         </label>
       </div>
 
-      <div class="group">
+      <div class="group control-group logo-group">
+        <div class="group-title">로고</div>
         <label class="check">
           <input id="useLogo" type="checkbox" checked>
           <span>mg_logo.png 넣기</span>
@@ -147,7 +151,7 @@
         </label>
       </div>
 
-      <div class="group">
+      <div class="group control-group template-group">
         <div class="group-title">템플릿</div>
         <label class="check">
           <input id="showBorder" type="checkbox" checked>
@@ -164,7 +168,7 @@
     </aside>
   </main>
 
-  <script src="mg_logo_data.js?v=20260610-3"></script>
-  <script src="app.js?v=20260610-3"></script>
+  <script src="mg_logo_data.js?v=20260610-5"></script>
+  <script src="app.js?v=20260610-5"></script>
 </body>
 </html>

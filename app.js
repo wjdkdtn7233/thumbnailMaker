@@ -193,6 +193,7 @@ function constrainPhotoBox() {
 
 function resetPhotoPosition() {
   if (!state.photo) return;
+  setRangePairValue(controls.photoScale, 100);
   state.photoBox.initialized = false;
   controls.activeLayer.value = "photo";
   render();

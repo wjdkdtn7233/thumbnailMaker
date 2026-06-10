@@ -183,18 +183,18 @@ button {
   margin-bottom: 10px;
 }
 
-.text-group {
+.control-group {
   padding: 14px 12px 12px;
   border: 1px solid #d8d8d8;
   border-radius: 8px;
   background: #fbfbfb;
 }
 
-.text-group + .text-group {
+.control-group + .control-group {
   margin-top: 14px;
 }
 
-.text-group .group-title {
+.control-group .group-title {
   display: flex;
   align-items: center;
   min-height: 34px;
@@ -206,12 +206,24 @@ button {
   color: #fff;
 }
 
+.photo-group .group-title {
+  background: #315c8f;
+}
+
 .restaurant-group .group-title {
   background: #202020;
 }
 
 .location-group .group-title {
   background: #15983d;
+}
+
+.logo-group .group-title {
+  background: #8b4c96;
+}
+
+.template-group .group-title {
+  background: #98692e;
 }
 
 .field {
