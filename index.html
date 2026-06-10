@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>썸네일 생성기</title>
-  <link rel="stylesheet" href="styles.css?v=20260610-6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css?v=20260610-7">
 </head>
 <body>
   <main class="app">
@@ -17,7 +18,14 @@
     <aside class="panel" aria-label="편집 도구">
       <div class="panel-head">
         <h1>밍글이용 썸네일 생성기 <span class="title-heart" aria-hidden="true">♥</span></h1>
-        <button id="downloadBtn" type="button">다운로드</button>
+        <div class="panel-actions">
+          <button id="shareKakaoBtn" class="icon-button kakao-button" type="button" aria-label="카카오톡 공유" title="카카오톡 공유">
+            <span aria-hidden="true">톡</span>
+          </button>
+          <button id="downloadBtn" class="icon-button download-button" type="button" aria-label="다운로드" title="다운로드">
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
 
       <label class="field">
@@ -172,7 +180,7 @@
     </aside>
   </main>
 
-  <script src="mg_logo_data.js?v=20260610-6"></script>
-  <script src="app.js?v=20260610-6"></script>
+  <script src="mg_logo_data.js?v=20260610-7"></script>
+  <script src="app.js?v=20260610-7"></script>
 </body>
 </html>

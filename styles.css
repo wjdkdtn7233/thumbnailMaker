@@ -113,7 +113,7 @@ canvas:active {
 
 .panel-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 88px;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   margin-bottom: 18px;
@@ -149,6 +149,37 @@ button {
   background: var(--accent);
   cursor: pointer;
   white-space: nowrap;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 19px;
+}
+
+.download-button {
+  background: var(--accent);
+}
+
+.kakao-button {
+  color: #191600;
+  background: #fee500;
+}
+
+.kakao-button span {
+  font-size: 16px;
+  font-weight: 900;
 }
 
 .secondary-button {
@@ -343,7 +374,7 @@ button {
 
 @media (max-width: 420px) {
   .panel-head {
-    grid-template-columns: minmax(0, 1fr) 78px;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   h1 {
@@ -352,5 +383,12 @@ button {
 
   button {
     padding: 8px 10px;
+  }
+
+  .icon-button {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
   }
 }

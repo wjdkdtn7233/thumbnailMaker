@@ -8,6 +8,7 @@ const controls = {
   resetPhotoPosition: document.getElementById("resetPhotoPosition"),
   logoInput: document.getElementById("logoInput"),
   downloadBtn: document.getElementById("downloadBtn"),
+  shareKakaoBtn: document.getElementById("shareKakaoBtn"),
   locationText: document.getElementById("locationText"),
   restaurantText: document.getElementById("restaurantText"),
   showLocationText: document.getElementById("showLocationText"),
@@ -833,6 +834,18 @@ function updateCanvasCursor(event) {
   canvas.style.cursor = ["location", "restaurant", "logo"].includes(layer) ? "grab" : "default";
 }
 
+function canvasToPngBlob() {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) {
+        resolve(blob);
+      } else {
+        reject(new Error("Canvas export failed"));
+      }
+    }, "image/png");
+  });
+}
+
 function downloadImage() {
   render({ showSelection: false });
   try {
@@ -844,6 +857,35 @@ function downloadImage() {
     link.remove();
   } catch (error) {
     alert("다운로드가 막혔습니다. 로고 파일을 직접 선택한 뒤 다시 시도해 주세요.");
+  }
+  render();
+}
+
+async function shareKakaoImage() {
+  render({ showSelection: false });
+  try {
+    const blob = await canvasToPngBlob();
+    const file = new File([blob], "thumbnail.png", { type: "image/png" });
+    const shareData = {
+      title: "밍글이용 썸네일",
+      text: "썸네일 이미지",
+      files: [file],
+    };
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share(shareData);
+    } else if (navigator.share) {
+      await navigator.share({
+        title: shareData.title,
+        text: shareData.text,
+      });
+    } else {
+      alert("이 브라우저에서는 공유를 지원하지 않습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      alert("공유를 시작하지 못했습니다. 다운로드 후 카카오톡으로 공유해 주세요.");
+    }
   }
   render();
 }
@@ -892,6 +934,7 @@ controls.logoInput.addEventListener("change", (event) => {
 setupSyncedRanges();
 controls.resetPhotoPosition.addEventListener("click", resetPhotoPosition);
 controls.downloadBtn.addEventListener("click", downloadImage);
+controls.shareKakaoBtn.addEventListener("click", shareKakaoImage);
 canvas.addEventListener("mousedown", startDrag);
 canvas.addEventListener("mousemove", moveDrag);
 canvas.addEventListener("mousemove", updateCanvasCursor);
