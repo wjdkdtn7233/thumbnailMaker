@@ -9,6 +9,8 @@ const controls = {
   downloadBtn: document.getElementById("downloadBtn"),
   locationText: document.getElementById("locationText"),
   restaurantText: document.getElementById("restaurantText"),
+  showLocationText: document.getElementById("showLocationText"),
+  showRestaurantText: document.getElementById("showRestaurantText"),
   activeLayer: document.getElementById("activeLayer"),
   locationSize: document.getElementById("locationSize"),
   locationSizeNumber: document.getElementById("locationSizeNumber"),
@@ -185,18 +187,7 @@ function drawCoverImage(image) {
 }
 
 function constrainPhotoBox() {
-  const box = state.photoBox;
-  if (box.width <= canvas.width) {
-    box.x = (canvas.width - box.width) / 2;
-  } else {
-    box.x = Math.min(0, Math.max(canvas.width - box.width, box.x));
-  }
-
-  if (box.height <= canvas.height) {
-    box.y = (canvas.height - box.height) / 2;
-  } else {
-    box.y = Math.min(0, Math.max(canvas.height - box.height, box.y));
-  }
+  // Keep uploaded photos freely draggable, even when the image is wider or taller than the canvas.
 }
 
 function drawPlaceholder() {
@@ -567,46 +558,54 @@ function render(options = {}) {
 
   state.location.size = Number(controls.locationSize.value);
   state.restaurant.size = Number(controls.restaurantSize.value);
+  state.hitBoxes.location = null;
+  state.hitBoxes.restaurant = null;
 
   const locationText = controls.locationText.value.trim() || "상봉역 맛집";
   const restaurantText = controls.restaurantText.value.trim() || "함평국밥";
-  const pinScale = Number(controls.locationIconSize.value) / 43;
-  const pinBox = {
-    x: state.location.x - 64 * pinScale,
-    y: state.location.y - 60 * pinScale,
-    width: 55 * pinScale,
-    height: 76 * pinScale,
-  };
-  drawPin(state.location.x - 64 * pinScale, state.location.y - 60 * pinScale, .72 * pinScale);
-  const locationBox = drawStackedText(
-    locationText,
-    state.location.x,
-    state.location.y,
-    state.location.size,
-    {
-      fill: controls.locationFillColor.value,
-      outerStroke: controls.locationStrokeColor.value,
-      outerWidth: Number(controls.locationStrokeWidth.value),
-      fontFamily: locationFont,
-      fontWeight: 400,
-      letterSpacing: 3,
-    }
-  );
-  state.hitBoxes.location = joinBoxes([pinBox, locationBox]);
-  state.hitBoxes.restaurant = drawStackedText(
-    restaurantText,
-    state.restaurant.x,
-    state.restaurant.y,
-    state.restaurant.size,
-    {
-      fill: controls.restaurantFillColor.value,
-      outerStroke: controls.restaurantStrokeColor.value,
-      outerWidth: Number(controls.restaurantStrokeWidth.value),
-      fontFamily: restaurantFont,
-      fontWeight: 700,
-      letterSpacing: 2,
-    }
-  );
+
+  if (controls.showLocationText.checked) {
+    const pinScale = Number(controls.locationIconSize.value) / 43;
+    const pinBox = {
+      x: state.location.x - 64 * pinScale,
+      y: state.location.y - 60 * pinScale,
+      width: 55 * pinScale,
+      height: 76 * pinScale,
+    };
+    drawPin(state.location.x - 64 * pinScale, state.location.y - 60 * pinScale, .72 * pinScale);
+    const locationBox = drawStackedText(
+      locationText,
+      state.location.x,
+      state.location.y,
+      state.location.size,
+      {
+        fill: controls.locationFillColor.value,
+        outerStroke: controls.locationStrokeColor.value,
+        outerWidth: Number(controls.locationStrokeWidth.value),
+        fontFamily: locationFont,
+        fontWeight: 400,
+        letterSpacing: 3,
+      }
+    );
+    state.hitBoxes.location = joinBoxes([pinBox, locationBox]);
+  }
+
+  if (controls.showRestaurantText.checked) {
+    state.hitBoxes.restaurant = drawStackedText(
+      restaurantText,
+      state.restaurant.x,
+      state.restaurant.y,
+      state.restaurant.size,
+      {
+        fill: controls.restaurantFillColor.value,
+        outerStroke: controls.restaurantStrokeColor.value,
+        outerWidth: Number(controls.restaurantStrokeWidth.value),
+        fontFamily: restaurantFont,
+        fontWeight: 700,
+        letterSpacing: 2,
+      }
+    );
+  }
 
   if (showSelection && controls.activeLayer.value === "photo") {
     drawPhotoSelectionGrid();
@@ -858,6 +857,8 @@ controls.logoInput.addEventListener("change", (event) => {
 [
   controls.locationText,
   controls.restaurantText,
+  controls.showLocationText,
+  controls.showRestaurantText,
   controls.activeLayer,
   controls.locationFillColor,
   controls.locationStrokeColor,

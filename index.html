@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>썸네일 생성기</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260610-1">
 </head>
 <body>
   <main class="app">
@@ -48,6 +48,10 @@
           <span>음식점 이름</span>
           <input id="restaurantText" type="text" value="함평국밥">
         </label>
+        <label class="check">
+          <input id="showRestaurantText" type="checkbox" checked>
+          <span>음식점 이름 표시</span>
+        </label>
         <label class="field">
           <span>폰트 크기</span>
           <div class="range-row">
@@ -79,6 +83,10 @@
         <label class="field">
           <span>위치</span>
           <input id="locationText" type="text" value="상봉역 맛집">
+        </label>
+        <label class="check">
+          <input id="showLocationText" type="checkbox" checked>
+          <span>위치 텍스트 표시</span>
         </label>
         <label class="field">
           <span>폰트 크기</span>
@@ -155,7 +163,7 @@
     </aside>
   </main>
 
-  <script src="mg_logo_data.js"></script>
-  <script src="app.js"></script>
+  <script src="mg_logo_data.js?v=20260610-1"></script>
+  <script src="app.js?v=20260610-1"></script>
 </body>
 </html>
