@@ -894,18 +894,25 @@ async function shareKakaoImage() {
 async function copyImageToClipboard() {
   render({ showSelection: false });
   try {
-    if (!navigator.clipboard || !window.ClipboardItem) {
+    if (!window.isSecureContext) {
+      throw new Error("Clipboard image copy requires a secure context");
+    }
+
+    if (!navigator.clipboard || !navigator.clipboard.write || !window.ClipboardItem) {
       throw new Error("Clipboard image copy is not supported");
     }
 
-    const blob = await canvasToPngBlob();
     await navigator.clipboard.write([
       new ClipboardItem({
-        "image/png": blob,
+        "image/png": canvasToPngBlob(),
       }),
     ]);
   } catch (error) {
-    alert("이 브라우저에서는 이미지 클립보드 복사를 지원하지 않습니다.");
+    if (!window.isSecureContext) {
+      alert("브라우저 보안 정책 때문에 파일로 직접 열면 이미지 복사가 막힙니다. GitHub Pages 같은 HTTPS 주소나 localhost로 열어 주세요.");
+    } else {
+      alert("이 브라우저에서는 이미지 클립보드 복사를 지원하지 않습니다.");
+    }
   }
   render();
 }

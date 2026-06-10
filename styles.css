@@ -177,13 +177,14 @@ button {
   background: #2f2f2f;
 }
 
-.kakao-button {
-  color: #191600;
-  background: #fee500;
+.share-button {
+  display: none;
+  color: #fff;
+  background: #2563eb;
 }
 
-.kakao-button i {
-  font-size: 22px;
+.share-button i {
+  font-size: 20px;
 }
 
 .secondary-button {
@@ -373,6 +374,10 @@ button {
   .panel {
     max-height: none;
     margin-top: var(--mobile-preview-space);
+  }
+
+  .share-button {
+    display: grid;
   }
 }
 
