@@ -33,6 +33,7 @@ const controls = {
   logoOpacity: document.getElementById("logoOpacity"),
   logoOpacityNumber: document.getElementById("logoOpacityNumber"),
   showBorder: document.getElementById("showBorder"),
+  borderColor: document.getElementById("borderColor"),
   photoDim: document.getElementById("photoDim"),
   photoDimNumber: document.getElementById("photoDimNumber"),
 };
@@ -74,6 +75,15 @@ function clampNumber(value, min, max) {
   const numeric = Number(value);
   if (Number.isNaN(numeric)) return min;
   return Math.max(min, Math.min(max, numeric));
+}
+
+function rgbaFromHex(hex, alpha, fallback = "#fff4b2") {
+  const value = /^#[0-9a-f]{6}$/i.test(hex) ? hex : fallback;
+  const numeric = Number.parseInt(value.slice(1), 16);
+  const r = (numeric >> 16) & 255;
+  const g = (numeric >> 8) & 255;
+  const b = numeric & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
 function syncRangeValue(source, target) {
@@ -215,8 +225,9 @@ function drawPlaceholder() {
 
 function drawRoughBorder() {
   if (!controls.showBorder.checked) return;
+  const borderColor = controls.borderColor.value || "#fff4b2";
   ctx.save();
-  ctx.strokeStyle = "rgba(255, 244, 178, .88)";
+  ctx.strokeStyle = rgbaFromHex(borderColor, .88);
   ctx.lineWidth = 2.6;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
@@ -229,11 +240,11 @@ function drawRoughBorder() {
   const bottom = canvas.height - 18;
   const radius = 34;
 
-  drawCrayonRoundRect(left, top, right, bottom, radius);
+  drawCrayonRoundRect(left, top, right, bottom, radius, borderColor);
   ctx.restore();
 }
 
-function drawCrayonRoundRect(left, top, right, bottom, radius) {
+function drawCrayonRoundRect(left, top, right, bottom, radius, borderColor) {
   const path = new Path2D();
   path.moveTo(left + radius, top);
   path.lineTo(right - radius, top);
@@ -249,19 +260,19 @@ function drawCrayonRoundRect(left, top, right, bottom, radius) {
   const points = sampleRoundRectPoints(left, top, right, bottom, radius, 620);
 
   ctx.save();
-  ctx.strokeStyle = "rgba(244, 231, 154, .62)";
+  ctx.strokeStyle = rgbaFromHex(borderColor, .62);
   ctx.lineWidth = 2.4;
   ctx.stroke(path);
   ctx.restore();
 
   ctx.save();
-  ctx.strokeStyle = "rgba(255, 251, 198, .84)";
+  ctx.strokeStyle = rgbaFromHex(borderColor, .84);
   ctx.lineWidth = 1.35;
   ctx.stroke(path);
   ctx.restore();
 
   ctx.save();
-  ctx.strokeStyle = "rgba(255, 247, 185, .58)";
+  ctx.strokeStyle = rgbaFromHex(borderColor, .58);
   ctx.lineWidth = .8;
   ctx.lineCap = "round";
   points.forEach((point, index) => {
@@ -285,7 +296,7 @@ function drawCrayonRoundRect(left, top, right, bottom, radius) {
   ctx.restore();
 
   ctx.save();
-  ctx.strokeStyle = "rgba(218, 202, 118, .28)";
+  ctx.strokeStyle = rgbaFromHex(borderColor, .28);
   ctx.lineWidth = .55;
   ctx.lineCap = "round";
   points.forEach((point, index) => {
@@ -309,7 +320,7 @@ function drawCrayonRoundRect(left, top, right, bottom, radius) {
   ctx.restore();
 
   ctx.save();
-  ctx.fillStyle = "rgba(255, 255, 219, .42)";
+  ctx.fillStyle = rgbaFromHex(borderColor, .42);
   points.forEach((point, index) => {
     if (index % 8 !== 0) return;
     const dx = Math.sin(index * 2.19) * .9;
@@ -875,6 +886,7 @@ controls.logoInput.addEventListener("change", (event) => {
   controls.restaurantStrokeColor,
   controls.useLogo,
   controls.showBorder,
+  controls.borderColor,
 ].forEach((control) => control.addEventListener("input", render));
 
 setupSyncedRanges();
