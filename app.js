@@ -9,6 +9,7 @@ const controls = {
   logoInput: document.getElementById("logoInput"),
   downloadBtn: document.getElementById("downloadBtn"),
   shareKakaoBtn: document.getElementById("shareKakaoBtn"),
+  copyBtn: document.getElementById("copyBtn"),
   locationText: document.getElementById("locationText"),
   restaurantText: document.getElementById("restaurantText"),
   showLocationText: document.getElementById("showLocationText"),
@@ -890,6 +891,25 @@ async function shareKakaoImage() {
   render();
 }
 
+async function copyImageToClipboard() {
+  render({ showSelection: false });
+  try {
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      throw new Error("Clipboard image copy is not supported");
+    }
+
+    const blob = await canvasToPngBlob();
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        "image/png": blob,
+      }),
+    ]);
+  } catch (error) {
+    alert("이 브라우저에서는 이미지 클립보드 복사를 지원하지 않습니다.");
+  }
+  render();
+}
+
 function preloadLogo() {
   const image = new Image();
   image.onload = () => {
@@ -935,6 +955,7 @@ setupSyncedRanges();
 controls.resetPhotoPosition.addEventListener("click", resetPhotoPosition);
 controls.downloadBtn.addEventListener("click", downloadImage);
 controls.shareKakaoBtn.addEventListener("click", shareKakaoImage);
+controls.copyBtn.addEventListener("click", copyImageToClipboard);
 canvas.addEventListener("mousedown", startDrag);
 canvas.addEventListener("mousemove", moveDrag);
 canvas.addEventListener("mousemove", updateCanvasCursor);
