@@ -5,6 +5,7 @@ const controls = {
   photoInput: document.getElementById("photoInput"),
   photoScale: document.getElementById("photoScale"),
   photoScaleNumber: document.getElementById("photoScaleNumber"),
+  resetPhotoPosition: document.getElementById("resetPhotoPosition"),
   logoInput: document.getElementById("logoInput"),
   downloadBtn: document.getElementById("downloadBtn"),
   locationText: document.getElementById("locationText"),
@@ -188,6 +189,13 @@ function drawCoverImage(image) {
 
 function constrainPhotoBox() {
   // Keep uploaded photos freely draggable, even when the image is wider or taller than the canvas.
+}
+
+function resetPhotoPosition() {
+  if (!state.photo) return;
+  state.photoBox.initialized = false;
+  controls.activeLayer.value = "photo";
+  render();
 }
 
 function drawPlaceholder() {
@@ -869,6 +877,7 @@ controls.logoInput.addEventListener("change", (event) => {
 ].forEach((control) => control.addEventListener("input", render));
 
 setupSyncedRanges();
+controls.resetPhotoPosition.addEventListener("click", resetPhotoPosition);
 controls.downloadBtn.addEventListener("click", downloadImage);
 canvas.addEventListener("mousedown", startDrag);
 canvas.addEventListener("mousemove", moveDrag);

@@ -151,6 +151,20 @@ button {
   white-space: nowrap;
 }
 
+.secondary-button {
+  width: 100%;
+  min-height: 42px;
+  margin: 0 0 16px;
+  border: 1px solid #d4d4d4;
+  color: #202020;
+  background: #f7f7f7;
+}
+
+.secondary-button:hover {
+  border-color: #b8b8b8;
+  background: #ececec;
+}
+
 .group {
   padding-top: 16px;
   margin-top: 16px;
@@ -167,6 +181,37 @@ button {
 
 .group-title {
   margin-bottom: 10px;
+}
+
+.text-group {
+  padding: 14px 12px 12px;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  background: #fbfbfb;
+}
+
+.text-group + .text-group {
+  margin-top: 14px;
+}
+
+.text-group .group-title {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  margin: -14px -12px 13px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #d8d8d8;
+  border-radius: 7px 7px 0 0;
+  font-size: 14px;
+  color: #fff;
+}
+
+.restaurant-group .group-title {
+  background: #202020;
+}
+
+.location-group .group-title {
+  background: #15983d;
 }
 
 .field {
