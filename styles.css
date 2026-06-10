@@ -379,6 +379,10 @@ button {
   .share-button {
     display: grid;
   }
+
+  .copy-button {
+    display: none;
+  }
 }
 
 @media (max-width: 560px) {

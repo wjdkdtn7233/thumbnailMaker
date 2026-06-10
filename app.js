@@ -907,6 +907,7 @@ async function copyImageToClipboard() {
         "image/png": canvasToPngBlob(),
       }),
     ]);
+    alert("이미지가 클립보드에 복사되었습니다.");
   } catch (error) {
     if (!window.isSecureContext) {
       alert("브라우저 보안 정책 때문에 파일로 직접 열면 이미지 복사가 막힙니다. GitHub Pages 같은 HTTPS 주소나 localhost로 열어 주세요.");
