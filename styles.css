@@ -113,9 +113,9 @@ canvas:active {
 
 .panel-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 18px;
 }
 
@@ -153,7 +153,7 @@ button {
 
 .panel-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 8px;
 }
 
@@ -376,11 +376,14 @@ button {
   }
 }
 
-@media (max-width: 420px) {
-  .panel-head {
-    grid-template-columns: minmax(0, 1fr) auto;
+@media (max-width: 560px) {
+  h1 {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
+}
 
+@media (max-width: 420px) {
   h1 {
     font-size: 18px;
   }
